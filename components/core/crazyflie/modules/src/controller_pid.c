@@ -105,7 +105,6 @@ void controllerPid(control_t *control, setpoint_t *setpoint,
       attitudeControllerResetPitchAttitudePID();
     }
 
-    // TODO: Investigate possibility to subtract gyro drift.
     attitudeControllerCorrectRatePID(sensors->gyro.x, -sensors->gyro.y, sensors->gyro.z,
                              rateDesired.roll, rateDesired.pitch, rateDesired.yaw);
 
@@ -114,6 +113,8 @@ void controllerPid(control_t *control, setpoint_t *setpoint,
                                         &control->yaw);
 
     control->yaw = -control->yaw;
+    control->roll = -control->roll;
+    control->pitch = -control->pitch;
 
     cmd_thrust = control->thrust;
     cmd_roll = control->roll;
@@ -152,6 +153,14 @@ void controllerPid(control_t *control, setpoint_t *setpoint,
     // Reset the calculated YAW angle for rate control
     attitudeDesired.yaw = state->attitude.yaw;
   }
+
+  /* if(tick%1000==0){ */
+  /*   DEBUG_PRINTW("Gyro : %f, %f, %f", sensors->gyro.x, sensors->gyro.y, sensors->gyro.z); */
+  /*   DEBUG_PRINTW("Acc  : %f, %f, %f", sensors->acc.x, sensors->acc.y, sensors->acc.z); */
+  /*   DEBUG_PRINTW("Contr: %d, %d, %d", control->roll, control->pitch, control->yaw); */
+  /* } */
+
+
 }
 
 

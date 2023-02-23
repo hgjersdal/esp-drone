@@ -251,7 +251,7 @@ static void stabilizerTask(void* param)
   //Wait for the system to be fully started to start stabilization loop
   systemWaitStart();
 
-  DEBUG_PRINTI("Wait for sensor calibration...\n");
+  DEBUG_PRINTW("Wait for sensor calibration...\n");
 
   // Wait for sensors to be calibrated
   lastWakeTime = xTaskGetTickCount();
@@ -263,12 +263,11 @@ static void stabilizerTask(void* param)
 
   rateSupervisorInit(&rateSupervisorContext, xTaskGetTickCount(), M2T(1000), 997, 1003, 1);
 
-  DEBUG_PRINTI("Ready to fly.\n");
+  DEBUG_PRINTW("Ready to fly.\n");
 
   while(1) {
     // The sensor should unlock at 1kHz
     sensorsWaitDataReady();
-
     if (startPropTest != false) {
       // TODO: What happens with estimator when we run tests after startup?
       testState = configureAcc;
@@ -310,6 +309,10 @@ static void stabilizerTask(void* param)
         powerDistribution(&control);
       }
 
+     /* if(tick%1000 == 0){ */
+      /*   DEBUG_PRINTW("Stabilizer loop rate (%"PRIu32")\n", rateSupervisorLatestCount(&rateSupervisorContext)); */
+      /* } */
+
       //TODO: Log data to uSD card if configured
       /*if (usddeckLoggingEnabled()
           && usddeckLoggingMode() == usddeckLoggingMode_SynchronousStabilizer
@@ -320,10 +323,9 @@ static void stabilizerTask(void* param)
     calcSensorToOutputLatency(&sensorData);
     tick++;
     STATS_CNT_RATE_EVENT(&stabilizerRate);
-
     if (!rateSupervisorValidate(&rateSupervisorContext, xTaskGetTickCount())) {
       if (!rateWarningDisplayed) {
-        DEBUG_PRINT("WARNING: stabilizer loop rate is off (%"PRIu32")\n", rateSupervisorLatestCount(&rateSupervisorContext));
+        DEBUG_PRINTW("WARNING: stabilizer loop rate is off (%"PRIu32")\n", rateSupervisorLatestCount(&rateSupervisorContext));
         rateWarningDisplayed = true;
       }
     }

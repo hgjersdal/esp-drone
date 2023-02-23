@@ -77,6 +77,11 @@ bool mpu6050Test(void)
  */
 bool mpu6050TestConnection()
 {
+  DEBUG_PRINTI("%d\n",mpu6050GetDeviceID());
+  DEBUG_PRINTI("%d\n",mpu6050GetDeviceID());
+  DEBUG_PRINTI("%d\n",mpu6050GetDeviceID());
+  DEBUG_PRINTI("%d\n",mpu6050GetDeviceID());
+  DEBUG_PRINTI("%d\n",mpu6050GetDeviceID());
     return mpu6050GetDeviceID() == 0b110100;
 }
 
